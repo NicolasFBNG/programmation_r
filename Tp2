@@ -1,0 +1,162 @@
+##Exercice 1 
+
+#a. Importez le jeu de données pokemon.xlsx à l’aide du package readxl.
+
+setwd("C:/Users/nicob/Desktop/cours/S2/R")
+install.packages("readxl")
+
+
+                  
+#b. Combien de lignes, colonnes sont présentes dans ce dataset (utilisez les fonctions adaptées) ?
+
+def<-read_excel(path="pokemon.xlsx", sheet= "pokemon")
+ncol(def)
+nrow(def)
+
+#c. Affichez le nom des colonnes.
+
+colnames(def)
+
+#d. Affichez le type des colonnes avec la fonction adaptée.
+
+str(def)
+
+#e. On souhaite analyser les variables generation, is_legendary, et type en tant que variables qualitatives. Modifier le type de ces variables pour les transformer en type factor.
+
+def$generation=as.factor(def$generation)
+def$is_legendary=as.factor(def$is_legendary)
+def$type=as.factor(def$type)
+
+#f. Combien de niveaux (levels) sont présents dans ces variables ?
+
+length(levels(def$generation))
+length(levels(def$is_legendary))
+length(levels(def$type))
+
+#g. Affichez un résumé des données avec la fonction adaptée.
+
+summary(def)
+
+
+##Exercice 2
+
+# a. Déterminer la moyenne de la variable weight_kg.
+
+mean(def$weight_kg,na.rm=TRUE)
+
+# b. Déterminer la médiane de la variable weight_kg.
+
+median(def$weight_kg,na.rm=TRUE)
+
+# c. Déterminer les quartiles de la variable height_m.
+
+quantile(def$height_m,na.rm=TRUE,type=4)
+
+# d. Déterminer les déciles de la variable height_m.
+
+quantile(def$height_m,na.rm=TRUE,type=9)
+
+# e. Déterminer la variance et l’écart-type de la variable weight_kg.
+
+var(def$weight_kg, na.rm=TRUE)
+sd(def$weight_kg, na.rm=TRUE)
+
+# f. Déterminer un tri à plat pour compter les effectifs des modalités de chaque variable factor en triant 
+#chaque sortie par ordre décroissant.
+
+sort(x=table(def$generation), decreasing=TRUE)
+sort(x=table(def$is_legendary), decreasing=TRUE)
+sort(x=table(def$type), decreasing=TRUE)
+
+
+
+##Exrecice 3:
+
+
+# a. Sélectionnez la colonne nom et is_legendary.
+
+requete_1<-def[c("nom","is_legendary")]
+dim(requete_1)
+
+# b. Sélectionnez les 50 premières lignes et les deux premières colonnes.
+
+requete_2<-def[1:50,1:2]
+dim(requete_2)
+
+# c. Sélectionnez les 10 premières lignes et toutes les colonnes.
+
+requete_3<-def[1:10,]
+dim(requete_3)
+
+# d. Sélectionnez toutes les colonnes sauf la dernière.
+
+requete_4<-def[,-10]
+dim(requete_4)
+
+# e. Triez le dataset par ordre alphabétique et afficher le nom du pokemon dela première ligne.
+
+requete_5<-def[order(def[,2],decreasing = FALSE),]
+requete_5<-requete_5[1,]
+dim(requete_5)
+
+
+# f. Triez le dataset par weight_kg en ordre décroissant, et afficher le nomdu pokemon de la première
+# ligne
+
+requete_6<-def[order(def[,6],decreasing = FALSE),]
+requete_6<-requete_5[1,]
+dim(requete_6)
+
+# g. Triez le dataset par attack en ordre décroissant puis par speed en ordre croissant, et afficher le
+# nom des pokemons des 10 premières lignes.
+
+requete_7 <- def[order(def$attack, decreasing = TRUE), ]
+requete_7 <- requete_7[order(requete_7$speed, decreasing = FALSE), ]
+requete_7[1:10,2:2]
+
+
+
+#Exercice 4 : 
+
+
+#a.Filtrez sur les pokemons qui ont 150 ou plus d’attack puis trier le résultat par ordre décroissant
+#d’attack.
+requete_8 <- def[ def$attack >= 150, c("nom","attack")]
+requete_8 <- requete_1[order(requete_1$attack, decreasing = TRUE), ]
+dim(requete_8)
+
+#b.Filtrez sur les pokemons de type dragon,ghost,psychic et dark
+
+request_9 <- def[ def$type == "ghost"| def$type == "dragon"| def$type == "dark" | def$type == "psychic" , c("nom","type")]
+dim(request_2)
+
+#c.Filtrez sur les pokemons de type fire avec plus de 100 d’attack, puis trier le résultat par ordre
+#décroissant d’attack.
+
+request_10 <- def[ (def$type == "fire")&(def$attack >= 100), c("nom","attack"),]
+request_10 <- request_3[order(request_3$attack, decreasing = TRUE), ]
+dim(request_10)
+
+#d.Filtrez sur les pokemons qui ont entre 100 et 150 de speed. Les trier par speed décroissant.
+
+request_11 <- def[ (def$speed >= 100) & (def$speed <=150 ) , c("nom","speed"),]
+request_11 <- request_4[order(request_4$speed, decreasing = TRUE), ]
+dim(request_11)
+
+#e.Filtrez sur les pokémons qui ont des valeurs manquantes sur la variable height_m.
+
+
+requete_12<-def[is.na(def$height_m), c("nom","height_m")]
+dim(requete_12)
+
+#f.Filtrez sur les pokemons qui ont des valeurs renseignées à la fois pour la variable weight_kg et la
+#variable height.
+
+requete_13<-def[is.na(def$height_m)==FALSE&is.na(def$weight_kg)==FALSE,c("nom","height_m","weight_kg") ]
+dim(requete_13)
+
+#g.. Filtrez sur les pokemons pesant plus de 250 kg et affichez le résultat pour vérifier.
+
+request_14 <- def[def$weight_kg > 250, c("nom","weight_kg"), ]
+request_14 <- request_8[order(request_8$weight_kg, na.last = NA), ]
+dim(request_14)
